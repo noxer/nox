@@ -1,4 +1,4 @@
-package nox
+package math
 
 import "constraints"
 
