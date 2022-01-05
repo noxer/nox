@@ -2,32 +2,46 @@ package nox
 
 import (
 	"runtime"
+	"sync"
+
+	"github.com/noxer/nox/math"
 )
-
-type Result[T any] struct {
-	r T
-	e error
-}
-
-func NewResult[T any](r T, e error) Result[T] {
-	return Result[T]{
-		r: r,
-		e: e,
-	}
-}
-
-func (r Result[T]) OK() bool {
-	return r.e == nil
-}
 
 func ConcurrentNow[T, S any](tasks []T, f func(T) S) []S {
 	return ConcurrentNowN(tasks, f, runtime.NumCPU())
 }
 
 func ConcurrentNowN[T, S any](tasks []T, f func(T) S, workers int) []S {
+	switch len(tasks) {
+	case 0:
+		return nil
 
-}
+	case 1:
+		return []S{f(tasks[0])}
+	}
 
-func ConcurrentN[T, S any](tasks []T, f func(T) S, workers int) Future[S] {
+	workers = math.Min(len(tasks), workers)
 
+	wg := &sync.WaitGroup{}
+	wg.Add(workers)
+
+	in := make(chan int, workers)
+	results := make([]S, len(tasks))
+	for i := 0; i < workers; i++ {
+		go func() {
+			defer wg.Done()
+			for index := range in {
+				results[index] = f(tasks[index])
+			}
+		}()
+	}
+
+	go func() {
+		for i := range tasks {
+			in <- i
+		}
+		close(in)
+	}()
+
+	return results
 }
