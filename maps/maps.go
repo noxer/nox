@@ -97,3 +97,25 @@ func ProdValues[K comparable, V Number](m map[K]V) (sum V) {
 	}
 	return
 }
+
+type mapEnumerator[K comparable, V any] struct {
+	m    map[K]V
+	keys []K
+}
+
+func (e mapEnumerator[K, V]) Next() bool {
+	switch len(e.keys) {
+	case 1:
+		e.keys = nil
+		fallthrough
+	case 0:
+		return false
+	}
+
+	e.keys = e.keys[1:]
+	return true
+}
+
+func (e mapEnumerator[K, V]) Value() tuple.T2[K, V] {
+	return tuple.T2[K, V]{A: e.keys[0], B: e.m[e.keys[0]]}
+}
