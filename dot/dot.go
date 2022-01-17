@@ -50,18 +50,57 @@ func (r Result[T]) Error() error {
 	return r.err
 }
 
+type noxPanic struct {
+	err error
+}
+
 func (r Result[T]) Unwrap() T {
 	if r.err != nil {
-		panic(r.err)
+		panic(noxPanic{r.err})
 	}
 
 	return r.val
 }
 
-func (r Result[T]) Then(f func(t T)) {
-	if r.err == nil {
-		f(r.val)
+func IgnoreError() {
+	e := recover()
+	if e == nil {
+		return
 	}
+
+	if _, ok := e.(noxPanic); ok {
+		return
+	}
+
+	panic(e)
+}
+
+func CatchError(into *error) {
+	e := recover()
+	if e == nil {
+		return
+	}
+
+	if ne, ok := e.(noxPanic); ok {
+		*into = ne.err
+		return
+	}
+
+	panic(e)
+}
+
+func HandleError(f func(error)) {
+	e := recover()
+	if e == nil {
+		return
+	}
+
+	if ne, ok := e.(noxPanic); ok {
+		f(ne.err)
+		return
+	}
+
+	panic(e)
 }
 
 func Default[T any]() (t T) {
