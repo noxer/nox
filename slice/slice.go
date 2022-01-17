@@ -6,36 +6,32 @@ import (
 	. "github.com/noxer/nox/dot"
 )
 
-func Append[T any](sl []T, items ...T) []T {
-	return append(sl, items...)
+// Insert item e into sl at position i.
+func Insert[T any](sl []T, e T, i int) []T {
+	sl = append(sl, e) // take advantage of append
+
+	if i == len(sl)-1 {
+		return sl
+	}
+
+	copy(sl[i+1:], sl[i:])
+	sl[i] = e
+	return sl
 }
 
-func Insert[T constraints.Ordered](sl []T, e T) []T {
+// InsertSorted an element into a sorted list.
+func InsertSorted[T constraints.Ordered](sl []T, e T) []T {
 	index := Search(sl, e)
-	sl = append(sl, e)
-
-	if index == len(sl)-1 {
-		return sl
-	}
-
-	copy(sl[index+1:], sl[index:])
-	sl[index] = e
-	return sl
+	return Insert(sl, e, index)
 }
 
-func InsertBy[T any, P constraints.Ordered](sl []T, f func(T) P, e T) []T {
+// InsertSorted an element into a sorted list by f(e).
+func InsertSortedBy[T any, P constraints.Ordered](sl []T, f func(T) P, e T) []T {
 	index := SearchBy(sl, f, e)
-	sl = append(sl, e)
-
-	if index == len(sl)-1 {
-		return sl
-	}
-
-	copy(sl[index+1:], sl[index:])
-	sl[index] = e
-	return sl
+	return Insert(sl, e, index)
 }
 
+// RemoveFirst removes the first occurrance of e in sl.
 func RemoveFirst[T comparable](sl []T, e T) []T {
 	for i, t := range sl {
 		if t == e {
@@ -46,6 +42,7 @@ func RemoveFirst[T comparable](sl []T, e T) []T {
 	return sl
 }
 
+// RemoveAll instances of e from sl.
 func RemoveAll[T comparable](sl []T, e T) []T {
 	newSl := sl[:0]
 
@@ -58,11 +55,14 @@ func RemoveAll[T comparable](sl []T, e T) []T {
 	return newSl
 }
 
-func RemoveIndex[T any](sl []T, index int) []T {
-	copy(sl[index:], sl[index+1:])
+// RemoveIndex removes the element at index i.
+func RemoveIndex[T any](sl []T, i int) []T {
+	copy(sl[i:], sl[i+1:])
 	return sl[:len(sl)-1]
 }
 
+// Map applies the function f to all elements in sl and returns a new slice
+// with the results.
 func Map[T, S any](sl []T, f func(T) S) []S {
 	out := make([]S, len(sl))
 
@@ -73,18 +73,21 @@ func Map[T, S any](sl []T, f func(T) S) []S {
 	return out
 }
 
+// MapSelf applies the function f to all elements in sl and puts the result into sl.
 func MapSelf[T any](sl []T, f func(T) T) {
 	for i, t := range sl {
 		sl[i] = f(t)
 	}
 }
 
+// Each calls f for each element in sl.
 func Each[T any](sl []T, f func(T)) {
 	for _, t := range sl {
 		f(t)
 	}
 }
 
+// Sum all the elements in sl.
 func Sum[T Number](sl ...T) T {
 	if len(sl) == 0 {
 		return Default[T]()
@@ -98,6 +101,7 @@ func Sum[T Number](sl ...T) T {
 	return sum
 }
 
+// Prod multiplies all elements of sl.
 func Prod[T Number](sl ...T) T {
 	if len(sl) == 0 {
 		return Default[T]()
@@ -132,6 +136,7 @@ func (e *sliceEnumerator[T]) Value() T {
 	return Default[T]()
 }
 
+// Enumerate creates an enumerator for sl.
 func Enumerate[T any](sl []T) Enumerable[T] {
 	return &sliceEnumerator[T]{sl}
 }
