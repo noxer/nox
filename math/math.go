@@ -2,6 +2,7 @@ package math
 
 import "constraints"
 
+// Min returns the smallest item from a list of items.
 func Min[T constraints.Ordered](vs ...T) (min T) {
 	if len(vs) == 0 {
 		return
@@ -17,6 +18,7 @@ func Min[T constraints.Ordered](vs ...T) (min T) {
 	return
 }
 
+// Max returns the biggest item from a list of items.
 func Max[T constraints.Ordered](vs ...T) (max T) {
 	if len(vs) == 0 {
 		return
@@ -32,6 +34,7 @@ func Max[T constraints.Ordered](vs ...T) (max T) {
 	return
 }
 
+// MinMax returns the smallest and biggest element from a list of items.
 func MinMax[T constraints.Ordered](vs ...T) (min, max T) {
 	if len(vs) == 0 {
 		return
@@ -51,6 +54,7 @@ func MinMax[T constraints.Ordered](vs ...T) (min, max T) {
 	return
 }
 
+// Abs returns the absolute (unsigned) value of a possibly signed value.
 func Abs[T constraints.Signed](n T) T {
 	if n < 0 {
 		return -n
