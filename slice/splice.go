@@ -37,7 +37,7 @@ func Splice[T any](slice []T, index, length int, insert ...T) []T {
 	}
 
 	// make space for the additional bytes
-	slice = append(slice, insert[:len(insert)-length]...)
+	slice = MakeRoom(slice, len(insert)-length)
 
 	// move the last part of the slice out of the way
 	copy(slice[index+len(insert)-length:], slice[index:])

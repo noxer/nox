@@ -6,15 +6,29 @@ import (
 	. "github.com/noxer/nox/dot"
 )
 
-// Insert item e into sl at position i.
-func Insert[T any](sl []T, e T, i int) []T {
-	sl = append(sl, e) // take advantage of append
-
-	if i == len(sl)-1 {
-		return sl
+// MakeRoom extends the length of sl by add items. It will allocate a new slice
+// if cap(sl) is too small. If not it will reslice sl to include the additional
+// items. This works not unlike `append` but doesn't copy in any new elements.
+func MakeRoom[T any](sl []T, add int) []T {
+	available := cap(sl) - len(sl)
+	if available >= add {
+		return sl[:len(sl)+add]
 	}
 
-	copy(sl[i+1:], sl[i:])
+	newSl := make([]T, len(sl)+add)
+	copy(newSl, sl)
+
+	return newSl
+}
+
+// Insert item e into sl at position i.
+func Insert[T any](sl []T, e T, i int) []T {
+	sl = MakeRoom(sl, 1)
+
+	if i != len(sl)-1 {
+		copy(sl[i+1:], sl[i:])
+	}
+
 	sl[i] = e
 	return sl
 }
