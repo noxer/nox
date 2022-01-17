@@ -2,6 +2,8 @@ package list
 
 import (
 	"fmt"
+
+	. "github.com/noxer/nox/dot"
 )
 
 type Linked[T any] struct {
@@ -47,9 +49,9 @@ func (l *Linked[T]) last() **link[T] {
 	return last
 }
 
-func (l *Linked[T]) Get(i int) T {
+func (l *Linked[T]) Get(i int) Result[T] {
 	if i >= l.size {
-		panic(fmt.Sprintf("index out of range %d of %d", i, l.size))
+		return Err[T](fmt.Errorf("index out of range %d of %d", i, l.size))
 	}
-	return l.byIndex(i).val
+	return OK(l.byIndex(i).val)
 }
