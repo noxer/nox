@@ -1,9 +1,9 @@
 package set
 
 import (
-	"github.com/noxer/nox/channel"
 	. "github.com/noxer/nox/dot"
 	"github.com/noxer/nox/maps"
+	"github.com/noxer/nox/slice"
 )
 
 // Set offers set functionality. A set is a data structure that only contains unique, unsorted values.
@@ -94,13 +94,5 @@ func (s Set[T]) Slice() []T {
 
 // Enumerate creates an enumerable from this set.
 func (s Set[T]) Enumerate() Enumerable[T] {
-	ch := make(chan T)
-	go func() {
-		for k := range s {
-			ch <- k
-		}
-		close(ch)
-	}()
-
-	return channel.Enumerate(ch)
+	return slice.Enumerate(s.Slice())
 }
