@@ -7,10 +7,14 @@ import (
 	"github.com/noxer/nox/math"
 )
 
+// ConcurrentNow takes a list of tasks and starts a worker pool to process them
+// with f.
 func ConcurrentNow[T, S any](tasks []T, f func(T) S) []S {
 	return ConcurrentNowN(tasks, f, runtime.NumCPU())
 }
 
+// ConcurrentNowN takes a list of tasks and starts a worker pool of size
+// workers to process them with f.
 func ConcurrentNowN[T, S any](tasks []T, f func(T) S, workers int) []S {
 	switch len(tasks) {
 	case 0:
