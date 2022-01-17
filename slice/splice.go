@@ -1,7 +1,7 @@
 package slice
 
 // Splice removes a section of a slice and replaces it (optionally) with an
-// insert. Negative length extends the section to remove to the end of the
+// insert. A length < 0 extends the section to remove to the end of the
 // slice. Is the length longer than the slice it's trimmed. The index must be
 // in bounds of the slice, otherwise Splice panics.
 func Splice[T any](slice []T, index, length int, insert ...T) []T {
