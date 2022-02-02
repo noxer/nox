@@ -37,6 +37,15 @@ type Result[T any] struct {
 	err error
 }
 
+// Wrap a value, error pair into a result.
+func Wrap[T any](t T, err error) Result[T] {
+	if err != nil {
+		return Err[T](err)
+	}
+
+	return OK(t)
+}
+
 // OK creates a new Result with the value set to t.
 func OK[T any](t T) Result[T] {
 	return Result[T]{val: t}
