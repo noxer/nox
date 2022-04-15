@@ -1,7 +1,7 @@
 package maps
 
 import (
-	"constraints"
+	"golang.org/x/exp/constraints"
 
 	. "github.com/noxer/nox/dot"
 	"github.com/noxer/nox/slice"

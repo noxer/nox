@@ -1,8 +1,9 @@
 package slice
 
 import (
-	"constraints"
 	"sort"
+
+	"golang.org/x/exp/constraints"
 )
 
 type sorter[T constraints.Ordered] []T

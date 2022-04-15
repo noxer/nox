@@ -1,6 +1,6 @@
 package math
 
-import "constraints"
+import "golang.org/x/exp/constraints"
 
 // Min returns the smallest item from a list of items.
 func Min[T constraints.Ordered](vs ...T) (min T) {

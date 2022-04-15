@@ -2,7 +2,7 @@
 package dot
 
 import (
-	"constraints"
+	"golang.org/x/exp/constraints"
 )
 
 // Optional allows functions to return an optional result. This is useful for situations where the result may not exist but the absence is not an error.

@@ -1,7 +1,7 @@
 package slice
 
 import (
-	"constraints"
+	"golang.org/x/exp/constraints"
 
 	. "github.com/noxer/nox/dot"
 )
