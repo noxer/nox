@@ -1,5 +1,5 @@
 module github.com/noxer/nox
 
-go 1.18
+go 1.20
 
-require golang.org/x/exp v0.0.0-20220414153411-bcd21879b8fd // indirect
+require golang.org/x/exp v0.0.0-20230304125523-9ff063c70017
