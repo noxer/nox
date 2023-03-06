@@ -21,6 +21,46 @@ func MakeRoom[T any](sl []T, add int) []T {
 	return newSl
 }
 
+// Index returns the index of the element e or -1 if it's not found in the slice.
+func Index[T comparable](sl []T, e T) int {
+	for i, t := range sl {
+		if t == e {
+			return i
+		}
+	}
+	return -1
+}
+
+// IndexWhere returns the first index in sl where f(sl[idx]) == true.
+func IndexWhere[T any](sl []T, f func(T) bool) int {
+	for i, t := range sl {
+		if f(t) {
+			return i
+		}
+	}
+	return -1
+}
+
+func Indexes[T comparable](sl []T, e T) []int {
+	var idxs []int
+	for i, t := range sl {
+		if t == e {
+			idxs = append(idxs, i)
+		}
+	}
+	return idxs
+}
+
+func IndexesWhere[T any](sl []T, f func(T) bool) []int {
+	var idxs []int
+	for i, t := range sl {
+		if f(t) {
+			idxs = append(idxs, i)
+		}
+	}
+	return idxs
+}
+
 // Insert item e into sl at position i.
 func Insert[T any](sl []T, e T, i int) []T {
 	sl = MakeRoom(sl, 1)
@@ -56,12 +96,36 @@ func RemoveFirst[T comparable](sl []T, e T) []T {
 	return sl
 }
 
+// RemoveFirstWhere removes the first occurrance where f(sl[i]) is true.
+func RemoveFirstWhere[T any](sl []T, f func(T) bool) []T {
+	for i, t := range sl {
+		if f(t) {
+			return RemoveIndex(sl, i)
+		}
+	}
+
+	return sl
+}
+
 // RemoveAll instances of e from sl.
 func RemoveAll[T comparable](sl []T, e T) []T {
 	newSl := sl[:0]
 
 	for _, t := range sl {
 		if t != e {
+			newSl = append(newSl, t)
+		}
+	}
+
+	return newSl
+}
+
+// RemoveAll instances where f(sl[i]) is true from sl.
+func RemoveAllWhere[T any](sl []T, f func(T) bool) []T {
+	newSl := sl[:0]
+
+	for _, t := range sl {
+		if f(t) {
 			newSl = append(newSl, t)
 		}
 	}
